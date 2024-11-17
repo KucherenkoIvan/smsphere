@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"smsphere/internal/db"
 	"smsphere/internal/db/models"
+	router "smsphere/internal/http"
 )
 
 func main() {
@@ -32,4 +33,7 @@ func main() {
 
 	// delete
 	db.Connection.Delete(&record)
+
+	// init http router and start listening
+	router.InitRouter()
 }
