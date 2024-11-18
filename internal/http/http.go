@@ -12,7 +12,10 @@ const (
 	PORT      = 8080
 )
 
-var handlers map[string]http.HandlerFunc
+var (
+	handlers            map[string]http.HandlerFunc
+	registered_prefixes []string
+)
 
 func getRouteKey(method string, prefix string) string {
 	return fmt.Sprintf("%s %s", method, prefix)
@@ -21,19 +24,29 @@ func getRouteKey(method string, prefix string) string {
 func route(method string, prefix string, handler http.HandlerFunc) {
 	handlers[getRouteKey(method, prefix)] = handler
 
-	http.HandleFunc(prefix, func(w http.ResponseWriter, r *http.Request) {
-		key := getRouteKey(r.Method, prefix)
-		handler := handlers[key]
-		if handler == nil {
-			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		} else {
-			handler(w, r)
-		}
-	})
+	is_registered := false
+	for i := 0; i < len(registered_prefixes); i++ {
+		is_registered = is_registered || (prefix == registered_prefixes[i])
+	}
+
+	if !is_registered {
+		http.HandleFunc(prefix, func(w http.ResponseWriter, r *http.Request) {
+			key := getRouteKey(r.Method, prefix)
+			handler := handlers[key]
+			if handler == nil {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			} else {
+				handler(w, r)
+			}
+		})
+	}
+
+	registered_prefixes = append(registered_prefixes, prefix)
 }
 
 func Start() {
 	handlers = make(map[string]http.HandlerFunc)
+	registered_prefixes = []string{}
 
 	route("GET", "/app/info", controllers.AppInfo)
 	route("GET", "/api/app/counter", controllers.Counter)
