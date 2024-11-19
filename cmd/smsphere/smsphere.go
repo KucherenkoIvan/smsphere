@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"smsphere/internal/auth"
 	"smsphere/internal/db"
 	"smsphere/internal/db/models"
 	http_server "smsphere/internal/http"
@@ -11,6 +12,7 @@ func main() {
 	db.Connect()
 
 	db.Connection.AutoMigrate(&models.Log{})
+	db.Connection.AutoMigrate(&models.AuthUser{})
 
 	db.Connection.Create(&models.Log{Text: "App started"})
 
@@ -33,6 +35,15 @@ func main() {
 
 	// delete
 	db.Connection.Delete(&record)
+
+	aboba, error := auth.Register("aboba_4411", "very_strong_password")
+	login := auth.Login("aboba_4411", "very_strong_password")
+	fmt.Println("\n\n\nregister result\n\n\n")
+	fmt.Println(aboba)
+	fmt.Println(error)
+	fmt.Println("\n\n\nlogin result\n\n\n")
+	fmt.Println(login)
+	fmt.Println("\n\n\nend login result\n\n\n")
 
 	// init http router and start listening
 	http_server.Start()
