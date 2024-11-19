@@ -24,23 +24,23 @@ func getPasswordHash(password string, pepper string) string {
 	return base64.URLEncoding.EncodeToString(hasher.Sum(nil))
 }
 
-func Login(login string, password string) bool {
+func Login(login string, password string) (*models.AuthUser, error) {
 	var candidate *models.AuthUser
 
 	result := db.Connection.First(&candidate, models.AuthUser{Login: login})
 	if result.Error != nil {
 		log.Print(result.Error)
 
-		return false
+		return nil, errors.New("User not found")
 	}
 
 	passwordHash := getPasswordHash(password, candidate.Pepper)
 
 	if passwordHash == candidate.PasswordHash {
-		return true
+		return candidate, nil
 	}
 
-	return false
+	return nil, errors.New("Passwrod mismatch")
 }
 
 func Register(login string, password string) (*models.AuthUser, error) {

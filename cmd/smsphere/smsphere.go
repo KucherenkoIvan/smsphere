@@ -37,12 +37,13 @@ func main() {
 	db.Connection.Delete(&record)
 
 	aboba, error := auth.Register("aboba_4411", "very_strong_password")
-	login := auth.Login("aboba_4411", "very_strong_password")
+	login, error := auth.Login("aboba_4411", "very_strong_password")
 	fmt.Println("\n\n\nregister result\n\n\n")
 	fmt.Println(aboba)
 	fmt.Println(error)
 	fmt.Println("\n\n\nlogin result\n\n\n")
 	fmt.Println(login)
+	fmt.Println(error)
 	fmt.Println("\n\n\nend login result\n\n\n")
 
 	// init http router and start listening

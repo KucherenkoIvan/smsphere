@@ -50,8 +50,8 @@ func Start() {
 
 	route("GET", "/app/info", controllers.AppInfo)
 	route("GET", "/api/app/counter", controllers.Counter)
-	route("POST", "/api/app/auth/login", controllers.Login)
-	route("POST", "/api/app/auth/register", controllers.Register)
+	route("POST", "/auth/login", controllers.Login)
+	route("POST", "/auth/register", controllers.Register)
 
 	var error error
 	for i := 0; i < _ATTEMPTS; i++ {
