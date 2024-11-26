@@ -15,4 +15,5 @@ require (
 	golang.org/x/text v0.18.0 // indirect
 	gorm.io/driver/postgres v1.5.9 // indirect
 	gorm.io/gorm v1.25.12 // indirect
+	github.com/Sirupsen/logrus v1.9.3 // indirect
 )
